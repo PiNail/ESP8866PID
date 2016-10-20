@@ -44,7 +44,7 @@ int thermoCLK = 13;
 //const int ledPin =  6;      // the number of the LED pin
 const int RELAY_PIN =  3;
 // Variables will change :
-//int ledState = LOW;    
+int ledState = LOW;    
 
 #if (SSD1306_LCDHEIGHT != 32)
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
@@ -99,7 +99,9 @@ void setup() {
 
 void loop() {
   // basic readout test, just print the current temp
-   Input = thermocouple.readFahrenheit();
+   temp_f = thermocouple.readFahrenheit();
+   webString="Temperature: "+String((int)temp_f)+" F";
+   Input = temp_f;
    myPID.Compute();
    unsigned long now = millis();
    if(now - windowStartTime>WindowSize)
@@ -123,13 +125,12 @@ void loop() {
    display.clearDisplay();
    //digitalWrite(RELAY_PIN, LOW);
    //if (thermocouple.readFahrenheit() <= 87) {
-     //ledState = LOW;
-   //} else {
      //ledState = HIGH;
+   //} else {
+     //ledState = LOW;
    //}
-   //digitalWrite(ledPin, ledState);
-   temp_f = thermocouple.readFahrenheit();
-   webString="Temperature: "+String((int)temp_f)+" F";
+   //digitalWrite(RELAY_PIN, ledState);
+
    server.send(200, "text/plain", webString);
    server.handleClient();
 }
