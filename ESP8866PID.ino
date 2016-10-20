@@ -72,7 +72,7 @@ unsigned long windowStartTime;
 
 void setup() {
   windowStartTime = millis();
-  Setpoint = 89;
+  Setpoint = 100;
   myPID.SetOutputLimits(0, 100);
   myPID.SetMode(AUTOMATIC);
   
