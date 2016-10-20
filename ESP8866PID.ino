@@ -10,6 +10,7 @@
 #include <Adafruit_SSD1306.h>
 
 //#define wifi
+//#define invertSSR
 
 //webstuff
 float temp_f;
@@ -141,8 +142,14 @@ void runrelay(){
   { //time to shift the Relay Window
     windowStartTime += WindowSize;
   }
+#if defined(invertSSR)
   if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,HIGH);
   else digitalWrite(RELAY_PIN,LOW);
+#endif
+#if !defined(invertSSR)
+if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,LOW);
+  else digitalWrite(RELAY_PIN,HIGH);
+#endif
   if(Output < millis() -windowStartTime) digitalWrite(ledPin,HIGH);
   else digitalWrite(ledPin,LOW);
   
