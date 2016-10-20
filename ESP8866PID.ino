@@ -115,16 +115,7 @@ void loop() {
 Input = temp_f;
   myPID.Compute();
   runrelay();
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setCursor(27, 0);
-  display.print("Current Temp");
-  display.setTextSize(2);
-  display.setCursor(25, 15);
-  display.println(thermocouple.readFahrenheit());
-  display.setCursor(90, 15);
-  display.print("F");
-  display.display();
+ 
   
 
  
@@ -152,6 +143,20 @@ if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,LOW);
 #endif
   if(Output < millis() -windowStartTime) digitalWrite(ledPin,HIGH);
   else digitalWrite(ledPin,LOW);
+  
+}
+
+void drawscreen(){
+   display.clearDisplay();
+  display.setTextSize(1);
+  display.setCursor(27, 0);
+  display.print("Current Temp");
+  display.setTextSize(2);
+  display.setCursor(25, 15);
+  display.println(thermocouple.readFahrenheit());
+  display.setCursor(90, 15);
+  display.print("F");
+  display.display();
   
 }
 
