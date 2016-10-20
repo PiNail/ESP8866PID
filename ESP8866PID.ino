@@ -110,7 +110,7 @@ void loop() {
   temp_f = thermocouple.readFahrenheit();
 #if defined(wifi)
   webString = "Temperature: " + String((int)temp_f) + " F";
-  
+  webString = "Output: " + String((int)Output);
 #endif
 Input = temp_f;
   myPID.Compute();
