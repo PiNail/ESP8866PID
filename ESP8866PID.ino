@@ -159,7 +159,7 @@ void drawscreen(){
   display.display();
   display.println();
   display.clearDisplay();
-  delay(300);
+  delay(120);
   
 }
 
