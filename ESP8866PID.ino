@@ -78,8 +78,6 @@ void setup() {
   
   //pinMode(ledPin, OUTPUT);
   display.begin();
-  display.clearDisplay();
-  display.setTextColor(WHITE);
   // use Arduino pins
   pinMode(vccPin, OUTPUT); digitalWrite(vccPin, HIGH);
   pinMode(gndPin, OUTPUT); digitalWrite(gndPin, LOW);
@@ -88,7 +86,7 @@ void setup() {
   // wait for MAX chip to stabilize
 
   //webstuff
-  delay(1000);
+  delay(45);
   Serial.begin(115200);
   Serial.println();
   Serial.print("Configuring access point...");
