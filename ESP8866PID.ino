@@ -11,9 +11,10 @@
 
 //webstuff
 float temp_f;
-String webString="";
+#if defined(wifi)
+String webString = "";
 #include <ESP8266WiFi.h>
-#include <WiFiClient.h> 
+#include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 
 #include <ESP8266mDNS.h>
@@ -26,12 +27,12 @@ const char *password = "";
 ESP8266WebServer server(80);
 
 /* Just a little test message.  Go to http://192.168.4.1 in a web browser
- * connected to this access point to see it.
- */
+   connected to this access point to see it.
+*/
 void handleRoot() {
   server.send(200, "text/html", "<h1>You are connected</h1>");
 }
-
+#endif
 //#define PIN_INPUT 0
 //#define RELAY_PIN 3
 #define OLED_RESET LED_BUILTIN
@@ -44,7 +45,7 @@ int thermoCLK = 13;
 //const int ledPin =  6;      // the number of the LED pin
 const int RELAY_PIN =  3;
 // Variables will change :
-int ledState = LOW;    
+int ledState = LOW;
 
 #if (SSD1306_LCDHEIGHT != 32)
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
@@ -59,26 +60,27 @@ int gndPin = 2;
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-PID myPID(&Input, &Output, &Setpoint,2,5,1, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, 2, 5, 1, DIRECT);
+
 
 int WindowSize = 5000;
 unsigned long windowStartTime;
 
-  
+
 void setup() {
   windowStartTime = millis();
   Setpoint = 89;
-  myPID.SetOutputLimits(0, WindowSize);
+  myPID.SetOutputLimits(0, 100);
   myPID.SetMode(AUTOMATIC);
   
   //pinMode(ledPin, OUTPUT);
   display.begin();
-  display.clearDisplay();  
+  display.clearDisplay();
   display.setTextColor(WHITE);
-  // use Arduino pins 
+  // use Arduino pins
   pinMode(vccPin, OUTPUT); digitalWrite(vccPin, HIGH);
   pinMode(gndPin, OUTPUT); digitalWrite(gndPin, LOW);
-  
+
   // wait for MAX chip to stabilize
 
   //webstuff
@@ -87,6 +89,7 @@ void setup() {
   Serial.println();
   Serial.print("Configuring access point...");
   /* You can remove the password parameter if you want the AP to be open. */
+#if defined(wifi)
   WiFi.softAP(ssid, password);
 
   IPAddress myIP = WiFi.softAPIP();
@@ -95,42 +98,46 @@ void setup() {
   server.on("/", handleRoot);
   server.begin();
   Serial.println("HTTP server started");
+#endif
 }
 
 void loop() {
   // basic readout test, just print the current temp
-   temp_f = thermocouple.readFahrenheit();
-   webString="Temperature: "+String((int)temp_f)+" F";
-   Input = temp_f;
-   myPID.Compute();
-   unsigned long now = millis();
-   if(now - windowStartTime>WindowSize)
-   { //time to shift the Relay Window
-     windowStartTime += WindowSize;
-   }
-   if(Output > now - windowStartTime) digitalWrite(RELAY_PIN,HIGH);
-     else digitalWrite(RELAY_PIN,LOW);
-   display.setTextSize(1);
-   display.setCursor(27,0);
-   display.print("Current Temp");
-   display.setTextSize(2);
-   display.setCursor(25,15);  
-   display.println(thermocouple.readFahrenheit());
-   display.setCursor(90,15);
-   display.print("F");
-   //digitalWrite(RELAY_PIN, LOW);
-   delay(300);
-   display.display();
-   display.println();
-   display.clearDisplay();
-   //digitalWrite(RELAY_PIN, LOW);
-   //if (thermocouple.readFahrenheit() <= 87) {
-     //ledState = HIGH;
-   //} else {
-     //ledState = LOW;
-   //}
-   //digitalWrite(RELAY_PIN, ledState);
-
-   server.send(200, "text/plain", webString);
-   server.handleClient();
+  temp_f = thermocouple.readFahrenheit();
+#if defined(wifi)
+  webString = "Temperature: " + String((int)temp_f) + " F";
+  Input = temp_f;
+#endif
+  myPID.Compute();
+  unsigned long now = millis();
+  if (now - windowStartTime > WindowSize)
+  { //time to shift the Relay Window
+    windowStartTime += WindowSize;
+  }
+  if (Output > now - windowStartTime) digitalWrite(RELAY_PIN, HIGH);
+  else digitalWrite(RELAY_PIN, LOW);
+  display.setTextSize(1);
+  display.setCursor(27, 0);
+  display.print("Current Temp");
+  display.setTextSize(2);
+  display.setCursor(25, 15);
+  display.println(thermocouple.readFahrenheit());
+  display.setCursor(90, 15);
+  display.print("F");
+  //digitalWrite(RELAY_PIN, LOW);
+  delay(300);
+  display.display();
+  display.println();
+  display.clearDisplay();
+  //digitalWrite(RELAY_PIN, LOW);
+  //if (thermocouple.readFahrenheit() <= 87) {
+  //ledState = HIGH;
+  //} else {
+  //ledState = LOW;
+  //}
+  //digitalWrite(RELAY_PIN, ledState);
+#if defined(wifi)
+  server.send(200, "text/plain", webString);
+  server.handleClient();
+#endif
 }
