@@ -124,7 +124,7 @@ Input = temp_f;
   display.setCursor(90, 15);
   display.print("F");
  
-  delay(300);
+  delay(10);
   display.display();
   display.println();
   display.clearDisplay();
