@@ -115,6 +115,7 @@ void loop() {
 Input = temp_f;
   myPID.Compute();
   runrelay();
+  display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(27, 0);
   display.print("Current Temp");
@@ -123,10 +124,9 @@ Input = temp_f;
   display.println(thermocouple.readFahrenheit());
   display.setCursor(90, 15);
   display.print("F");
- 
-  delay(10);
   display.display();
-  display.println();
+  
+
  
   
 #if defined(wifi)
