@@ -82,7 +82,8 @@ void setup() {
   // use Arduino pins
   pinMode(vccPin, OUTPUT); digitalWrite(vccPin, HIGH);
   pinMode(gndPin, OUTPUT); digitalWrite(gndPin, LOW);
-
+  pinMode(RELAY_PIN, OUTPUT);
+  
   // wait for MAX chip to stabilize
 
   //webstuff
