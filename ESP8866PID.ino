@@ -109,8 +109,9 @@ void loop() {
   temp_f = thermocouple.readFahrenheit();
 #if defined(wifi)
   webString = "Temperature: " + String((int)temp_f) + " F";
-  Input = temp_f;
+  
 #endif
+Input = temp_f;
   myPID.Compute();
  
   display.setTextSize(1);
