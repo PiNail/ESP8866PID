@@ -127,7 +127,7 @@ Input = temp_f;
   delay(10);
   display.display();
   display.println();
-  display.clearDisplay();
+ 
   
 #if defined(wifi)
   server.send(200, "text/plain", webString);
