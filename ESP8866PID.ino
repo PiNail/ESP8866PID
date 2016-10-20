@@ -147,7 +147,7 @@ if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,LOW);
 }
 
 void drawscreen(){
-   display.clearDisplay();
+   //display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(27, 0);
   display.print("Current Temp");
