@@ -44,7 +44,7 @@ int thermoDO = 12;
 int thermoCS = 15;
 int thermoCLK = 13;
 
-//const int ledPin =  6;      // the number of the LED pin
+const int ledPin =  6;      // the number of the LED pin
 const int RELAY_PIN =  3;
 // Variables will change :
 int ledState = LOW;
@@ -114,7 +114,6 @@ void loop() {
 Input = temp_f;
   myPID.Compute();
   runrelay();
-  
   display.setTextSize(1);
   display.setCursor(27, 0);
   display.print("Current Temp");
@@ -135,10 +134,7 @@ Input = temp_f;
 #endif
 }
 
-void runloop() {
-  //setup PID code here to stage the loop run
-  
-}
+
 void runrelay(){
   //setup code here to use output from PID loop to apply it towards relay
    if(millis() - windowStartTime>WindowSize)
@@ -147,5 +143,8 @@ void runrelay(){
   }
   if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,HIGH);
   else digitalWrite(RELAY_PIN,LOW);
+  if(Output < millis() -windowStartTime) digitalWrite(ledPin,HIGH);
+  else digitalWrite(ledPin,LOW);
+  
 }
 
