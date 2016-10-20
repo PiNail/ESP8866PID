@@ -9,6 +9,8 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+//#define wifi
+
 //webstuff
 float temp_f;
 #if defined(wifi)
