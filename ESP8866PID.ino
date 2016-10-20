@@ -113,7 +113,8 @@ void loop() {
 #endif
 Input = temp_f;
   myPID.Compute();
- 
+  runrelay();
+  
   display.setTextSize(1);
   display.setCursor(27, 0);
   display.print("Current Temp");
@@ -140,6 +141,11 @@ void runloop() {
 }
 void runrelay(){
   //setup code here to use output from PID loop to apply it towards relay
-  
+   if(millis() - windowStartTime>WindowSize)
+  { //time to shift the Relay Window
+    windowStartTime += WindowSize;
+  }
+  if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,HIGH);
+  else digitalWrite(RELAY_PIN,LOW);
 }
 
