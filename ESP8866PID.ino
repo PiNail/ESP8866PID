@@ -113,7 +113,7 @@ void loop() {
 Input = temp_f;
   myPID.Compute();
   runrelay();
- 
+ drawscreen();
   
 
  
