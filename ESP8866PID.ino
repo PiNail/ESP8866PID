@@ -33,7 +33,7 @@ void handleRoot() {
 }
 
 //#define PIN_INPUT 0
-//#define RELAY_PIN 6
+//#define RELAY_PIN 3
 #define OLED_RESET LED_BUILTIN
 Adafruit_SSD1306 display(OLED_RESET);
 
@@ -42,7 +42,7 @@ int thermoCS = 15;
 int thermoCLK = 13;
 
 //const int ledPin =  6;      // the number of the LED pin
-const int RELAY_PIN =  6;
+const int RELAY_PIN =  3;
 // Variables will change :
 //int ledState = LOW;    
 
