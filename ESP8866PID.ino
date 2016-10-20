@@ -120,18 +120,12 @@ void loop() {
   display.println(thermocouple.readFahrenheit());
   display.setCursor(90, 15);
   display.print("F");
-  //digitalWrite(RELAY_PIN, LOW);
+ 
   delay(300);
   display.display();
   display.println();
   display.clearDisplay();
-  //digitalWrite(RELAY_PIN, LOW);
-  //if (thermocouple.readFahrenheit() <= 87) {
-  //ledState = HIGH;
-  //} else {
-  //ledState = LOW;
-  //}
-  //digitalWrite(RELAY_PIN, ledState);
+  
 #if defined(wifi)
   server.send(200, "text/plain", webString);
   server.handleClient();
