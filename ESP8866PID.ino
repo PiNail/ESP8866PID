@@ -70,6 +70,7 @@ int WindowSize = 5000;
 unsigned long windowStartTime;
 
 
+
 void setup() {
   windowStartTime = millis();
   Setpoint = 100;
@@ -82,7 +83,8 @@ void setup() {
   pinMode(vccPin, OUTPUT); digitalWrite(vccPin, HIGH);
   pinMode(gndPin, OUTPUT); digitalWrite(gndPin, LOW);
   pinMode(RELAY_PIN, OUTPUT);
-  
+  display.clearDisplay();
+  display.setTextColor(WHITE);
   // wait for MAX chip to stabilize
 
   //webstuff
@@ -110,10 +112,10 @@ void loop() {
   webString = "Temperature: " + String((int)temp_f) + " F";
   webString = "Output: " + String((int)Output);
 #endif
-Input = temp_f;
+  Input = temp_f;
   myPID.Compute();
   runrelay();
- drawscreen();
+  drawscreen();
   
 
  
@@ -145,7 +147,7 @@ if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,LOW);
 }
 
 void drawscreen(){
-   //display.clearDisplay();
+  //display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(27, 0);
   display.print("Current Temp");
@@ -155,6 +157,9 @@ void drawscreen(){
   display.setCursor(90, 15);
   display.print("F");
   display.display();
+  display.println();
+  display.clearDisplay();
+  delay(300);
   
 }
 
