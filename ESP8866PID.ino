@@ -9,6 +9,29 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
+//webstuff
+float temp_f;
+String webString="";
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h> 
+#include <ESP8266WebServer.h>
+
+#include <ESP8266mDNS.h>
+#include <ArduinoOTA.h>
+
+/* Set these to your desired credentials. */
+const char *ssid = "HendoNail";
+const char *password = "";
+
+ESP8266WebServer server(80);
+
+/* Just a little test message.  Go to http://192.168.4.1 in a web browser
+ * connected to this access point to see it.
+ */
+void handleRoot() {
+  server.send(200, "text/html", "<h1>You are connected</h1>");
+}
+
 //#define PIN_INPUT 0
 //#define RELAY_PIN 6
 #define OLED_RESET LED_BUILTIN
@@ -57,7 +80,21 @@ void setup() {
   pinMode(gndPin, OUTPUT); digitalWrite(gndPin, LOW);
   
   // wait for MAX chip to stabilize
-  delay(500);
+
+  //webstuff
+  delay(1000);
+  Serial.begin(115200);
+  Serial.println();
+  Serial.print("Configuring access point...");
+  /* You can remove the password parameter if you want the AP to be open. */
+  WiFi.softAP(ssid, password);
+
+  IPAddress myIP = WiFi.softAPIP();
+  Serial.print("AP IP address: ");
+  Serial.println(myIP);
+  server.on("/", handleRoot);
+  server.begin();
+  Serial.println("HTTP server started");
 }
 
 void loop() {
@@ -70,7 +107,7 @@ void loop() {
      windowStartTime += WindowSize;
    }
    if(Output > now - windowStartTime) digitalWrite(RELAY_PIN,HIGH);
-   else digitalWrite(RELAY_PIN,LOW);
+     else digitalWrite(RELAY_PIN,LOW);
    display.setTextSize(1);
    display.setCursor(27,0);
    display.print("Current Temp");
@@ -91,4 +128,8 @@ void loop() {
      //ledState = HIGH;
    //}
    //digitalWrite(ledPin, ledState);
+   temp_f = thermocouple.readFahrenheit();
+   webString="Temperature: "+String((int)temp_f)+" F";
+   server.send(200, "text/plain", webString);
+   server.handleClient();
 }
