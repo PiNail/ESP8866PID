@@ -131,3 +131,13 @@ void loop() {
   server.handleClient();
 #endif
 }
+
+void runloop() {
+  //setup PID code here to stage the loop run
+  
+}
+void runrelay(){
+  //setup code here to use output from PID loop to apply it towards relay
+  
+}
+
