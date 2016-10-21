@@ -62,8 +62,8 @@ int gndPin = 2;
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
-
+//PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, 10, 0200, 0100, DIRECT);
 
 int WindowSize = 500;
 unsigned long windowStartTime;
@@ -75,7 +75,8 @@ void setup() {
   Setpoint = 250;
   myPID.SetOutputLimits(0, 100);
   myPID.SetMode(AUTOMATIC);
-  
+
+ 
   //pinMode(ledPin, OUTPUT);
   display.begin();
   // use Arduino pins
@@ -107,7 +108,6 @@ void setup() {
 }
 
 void loop() {
-  //digitalWrite(RELAY_PIN,LOW);
   // basic readout test, just print the current temp
   temp_f = thermocouple.readFahrenheit();
 #if defined(wifi)
