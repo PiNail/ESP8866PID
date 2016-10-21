@@ -10,7 +10,7 @@
 #include <Adafruit_SSD1306.h>
 
 //#define wifi
-#define invertSSR
+//#define invertSSR
 
 //webstuff
 float temp_f;
@@ -46,10 +46,9 @@ int thermoCS = 15;
 int thermoCLK = 13;
 
 const int ledPin =  14;      // the number of the LED pin
-const int RELAY_PIN =  3;
+const int RELAY_PIN =  16;
 // Variables will change :
 int ledState = LOW;
-
 #if (SSD1306_LCDHEIGHT != 32)
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
 #endif
@@ -73,7 +72,7 @@ unsigned long windowStartTime;
 
 void setup() {
   windowStartTime = millis();
-  Setpoint = 89;
+  Setpoint = 250;
   myPID.SetOutputLimits(0, 100);
   myPID.SetMode(AUTOMATIC);
   
@@ -87,7 +86,8 @@ void setup() {
   display.clearDisplay();
   display.setTextColor(WHITE);
   // wait for MAX chip to stabilize
-
+  digitalWrite(RELAY_PIN,LOW);
+  digitalWrite(ledPin,LOW);
   //webstuff
   delay(45);
   Serial.begin(115200);
@@ -107,6 +107,7 @@ void setup() {
 }
 
 void loop() {
+  //digitalWrite(RELAY_PIN,LOW);
   // basic readout test, just print the current temp
   temp_f = thermocouple.readFahrenheit();
 #if defined(wifi)
@@ -144,6 +145,8 @@ if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,LOW);
 #endif
   if(Output < millis() -windowStartTime) digitalWrite(ledPin,HIGH);
   else digitalWrite(ledPin,LOW);
+if (thermocouple.readFahrenheit() > Setpoint+20);
+  digitalWrite(RELAY_PIN,LOW);
   
 }
 
