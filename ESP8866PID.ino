@@ -62,10 +62,10 @@ int gndPin = 2;
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
-//PID myPID(&Input, &Output, &Setpoint, 10, 0200, 0100, DIRECT);
+//PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, 1, 3, 0.2, DIRECT);
 
-int WindowSize = 500;
+int WindowSize = 300;
 unsigned long windowStartTime;
 
 
@@ -136,8 +136,7 @@ void runrelay(){
   { //time to shift the Relay Window
     windowStartTime += WindowSize;
   }
-//if (thermocouple.readFahrenheit() < Setpoint-100) digitalWrite(RELAY_PIN,HIGH);
-  //else digitalWrite(RELAY_PIN,LOW);
+
 #if defined(invertSSR)
   if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,HIGH);
   else digitalWrite(RELAY_PIN,LOW);
@@ -146,8 +145,10 @@ void runrelay(){
 if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,LOW);
   else digitalWrite(RELAY_PIN,HIGH);
 #endif
-  if(Output < millis() -windowStartTime) digitalWrite(ledPin,HIGH);
-  else digitalWrite(ledPin,LOW);
+  if (thermocouple.readFahrenheit() < Setpoint) digitalWrite(RELAY_PIN,HIGH);
+  else digitalWrite(RELAY_PIN,LOW);
+  //if(Output < millis() -windowStartTime) digitalWrite(ledPin,HIGH);
+  //else digitalWrite(ledPin,LOW);
 if (thermocouple.readFahrenheit() > Setpoint+20);
   digitalWrite(RELAY_PIN,LOW);
   
