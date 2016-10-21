@@ -66,7 +66,7 @@ double Setpoint, Input, Output;
 PID myPID(&Input, &Output, &Setpoint, 2, 5, 1, DIRECT);
 
 
-int WindowSize = 5000;
+int WindowSize = 500;
 unsigned long windowStartTime;
 
 
