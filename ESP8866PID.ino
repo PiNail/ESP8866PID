@@ -10,7 +10,7 @@
 #include <Adafruit_SSD1306.h>
 
 //#define wifi
-//#define invertSSR
+#define invertSSR
 
 //webstuff
 float temp_f;
@@ -38,14 +38,14 @@ void handleRoot() {
 #endif
 //#define PIN_INPUT 0
 //#define RELAY_PIN 3
-#define OLED_RESET 2
+#define OLED_RESET LED_BUILTIN
 Adafruit_SSD1306 display(OLED_RESET);
 
 int thermoDO = 12;
 int thermoCS = 15;
 int thermoCLK = 13;
 
-const int ledPin =  LED_BUILTIN;      // the number of the LED pin
+const int ledPin =  14;      // the number of the LED pin
 const int RELAY_PIN =  3;
 // Variables will change :
 int ledState = LOW;
@@ -73,7 +73,7 @@ unsigned long windowStartTime;
 
 void setup() {
   windowStartTime = millis();
-  Setpoint = 100;
+  Setpoint = 89;
   myPID.SetOutputLimits(0, 100);
   myPID.SetMode(AUTOMATIC);
   
@@ -83,6 +83,7 @@ void setup() {
   pinMode(vccPin, OUTPUT); digitalWrite(vccPin, HIGH);
   pinMode(gndPin, OUTPUT); digitalWrite(gndPin, LOW);
   pinMode(RELAY_PIN, OUTPUT);
+  pinMode(ledPin, OUTPUT);
   display.clearDisplay();
   display.setTextColor(WHITE);
   // wait for MAX chip to stabilize
@@ -160,6 +161,5 @@ void drawscreen(){
   display.println();
   display.clearDisplay();
   delay(120);
-  
 }
 
