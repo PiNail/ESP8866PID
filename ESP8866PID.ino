@@ -147,15 +147,16 @@ if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,LOW);
 #endif
   if (thermocouple.readFahrenheit() < Setpoint) digitalWrite(RELAY_PIN,HIGH);
   else digitalWrite(RELAY_PIN,LOW);
-  //if(Output < millis() -windowStartTime) digitalWrite(ledPin,HIGH);
-  //else digitalWrite(ledPin,LOW);
+  /*if(Output < millis() -windowStartTime) digitalWrite(ledPin,HIGH);
+  else digitalWrite(ledPin,LOW);
+  *leave these out for now
+  */
 if (thermocouple.readFahrenheit() > Setpoint+20);
   digitalWrite(RELAY_PIN,LOW);
   
 }
 
 void drawscreen(){
-  //display.clearDisplay();
   display.setTextSize(1);
   display.setCursor(27, 0);
   display.print("Current Temp");
