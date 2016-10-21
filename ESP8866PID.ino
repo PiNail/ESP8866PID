@@ -62,8 +62,8 @@ int gndPin = 2;
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-//PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
-PID myPID(&Input, &Output, &Setpoint, 10, 0200, 0100, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
+//PID myPID(&Input, &Output, &Setpoint, 10, 0200, 0100, DIRECT);
 
 int WindowSize = 500;
 unsigned long windowStartTime;
@@ -72,7 +72,7 @@ unsigned long windowStartTime;
 
 void setup() {
   windowStartTime = millis();
-  Setpoint = 250;
+  Setpoint = 450;
   myPID.SetOutputLimits(0, 100);
   myPID.SetMode(AUTOMATIC);
 
@@ -116,8 +116,9 @@ void loop() {
 #endif
   Input = temp_f;
   myPID.Compute();
-  runrelay();
   drawscreen();
+  runrelay();
+  
   
 
  
@@ -135,6 +136,8 @@ void runrelay(){
   { //time to shift the Relay Window
     windowStartTime += WindowSize;
   }
+//if (thermocouple.readFahrenheit() < Setpoint-100) digitalWrite(RELAY_PIN,HIGH);
+  //else digitalWrite(RELAY_PIN,LOW);
 #if defined(invertSSR)
   if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,HIGH);
   else digitalWrite(RELAY_PIN,LOW);
