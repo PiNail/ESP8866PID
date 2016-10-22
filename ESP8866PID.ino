@@ -49,7 +49,7 @@ const int ledPin =  14;      // the number of the LED pin
 const int RELAY_PIN =  16;
 // Variables will change :
 int ledState = LOW;
-#if (SSD1306_LCDHEIGHT != 32)
+#if (SSD1306_LCDHEIGHT != 64)
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
 #endif
 
@@ -63,16 +63,16 @@ double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
 //PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
-PID myPID(&Input, &Output, &Setpoint, 1, 3, 0.2, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, 30, 10.5, 2.12, DIRECT);
 
-int WindowSize = 300;
+int WindowSize = 500;
 unsigned long windowStartTime;
 
 
 
 void setup() {
   windowStartTime = millis();
-  Setpoint = 450;
+  Setpoint = 350;
   myPID.SetOutputLimits(0, 100);
   myPID.SetMode(AUTOMATIC);
 
@@ -156,13 +156,13 @@ if (thermocouple.readFahrenheit() > Setpoint+20);
 
 void drawscreen(){
   //display.clearDisplay();
-  display.setTextSize(1);
-  display.setCursor(27, 0);
-  display.print("Current Temp");
   display.setTextSize(2);
-  display.setCursor(25, 15);
+  display.setCursor(35, 0);
+  display.print("Temp");
+  display.setTextSize(3);
+  display.setCursor(0, 30);
   display.println(thermocouple.readFahrenheit());
-  display.setCursor(90, 15);
+  display.setCursor(100, 30);
   display.print("F");
   display.display();
   display.println();
