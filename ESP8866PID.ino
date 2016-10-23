@@ -62,16 +62,16 @@ double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
 //PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
-PID myPID(&Input, &Output, &Setpoint, 1, 1, 1, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, 100, 20, 0.1, DIRECT);
 
-int WindowSize = 500;
+int WindowSize = 400;
 unsigned long windowStartTime;
 
 
 
 void setup() {
   windowStartTime = millis();
-  Setpoint = 750;
+  Setpoint = 850;
   myPID.SetOutputLimits(0, 100);
   myPID.SetMode(AUTOMATIC);
 
@@ -147,12 +147,12 @@ void runrelay(){
 void drawscreen(){
   //display.clearDisplay();
   display.setTextSize(2);
-  display.setCursor(35, 0);
+  display.setCursor(38, 0);
   display.print("Temp");
   display.setTextSize(3);
   display.setCursor(0, 30);
   display.println(thermocouple.readFahrenheit());
-  display.setCursor(100, 30);
+  display.setCursor(109, 30);
   display.print("F");
   display.display();
   display.println();
