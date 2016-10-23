@@ -11,6 +11,8 @@
 
 //#define wifi
 //#define invertSSR
+//#define msLoop
+int msLoop = 0;
 
 //webstuff
 float temp_f;
@@ -69,6 +71,8 @@ unsigned long windowStartTime;
 
 
 
+
+
 void setup() {
   windowStartTime = millis();
   Setpoint = 850;
@@ -112,11 +116,20 @@ void loop() {
 #endif
   Input = temp_f;
   myPID.Compute();
-  drawscreen();
+  //drawscreen();
   //if(thermocouple.readFahrenheit() < Setpoint-150) digitalWrite(RELAY_PIN,HIGH);
     //else runrelay();
   runrelay();  
 
+//trying a countdown timer
+#if defined(msLoop)
+  msLoop = msLoop + 1;
+  if (msLoop = 1990000000) drawscreen();
+  if (msLoop = 2000000000) msLoop = 0;
+#endif
+#if !defined(msLoop)
+  drawscreen();
+#endif
   
   
 #if defined(wifi)
@@ -145,7 +158,7 @@ void runrelay(){
 }
 
 void drawscreen(){
-  //display.clearDisplay();
+  display.clearDisplay();
   display.setTextSize(2);
   display.setCursor(38, 0);
   display.print("Temp");
@@ -156,7 +169,8 @@ void drawscreen(){
   display.print("F");
   display.display();
   display.println();
-  display.clearDisplay();
+  
+
   delay(120);
 }
 
