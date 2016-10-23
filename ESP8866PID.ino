@@ -45,7 +45,6 @@ int thermoDO = 12;
 int thermoCS = 15;
 int thermoCLK = 13;
 
-const int ledPin =  14;      // the number of the LED pin
 const int RELAY_PIN =  16;
 // Variables will change :
 int ledState = LOW;
@@ -63,7 +62,7 @@ double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
 //PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
-PID myPID(&Input, &Output, &Setpoint, 30, 10.5, 0.112, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, 1, 1, 1, DIRECT);
 
 int WindowSize = 500;
 unsigned long windowStartTime;
@@ -72,23 +71,20 @@ unsigned long windowStartTime;
 
 void setup() {
   windowStartTime = millis();
-  Setpoint = 850;
+  Setpoint = 750;
   myPID.SetOutputLimits(0, 100);
   myPID.SetMode(AUTOMATIC);
 
  
-  //pinMode(ledPin, OUTPUT);
   display.begin();
   // use Arduino pins
   pinMode(vccPin, OUTPUT); digitalWrite(vccPin, HIGH);
   pinMode(gndPin, OUTPUT); digitalWrite(gndPin, LOW);
   pinMode(RELAY_PIN, OUTPUT);
-  pinMode(ledPin, OUTPUT);
   display.clearDisplay();
   display.setTextColor(WHITE);
   // wait for MAX chip to stabilize
   digitalWrite(RELAY_PIN,LOW);
-  digitalWrite(ledPin,LOW);
   //webstuff
   delay(45);
   Serial.begin(115200);
@@ -117,11 +113,11 @@ void loop() {
   Input = temp_f;
   myPID.Compute();
   drawscreen();
-  runrelay();
-  
-  
+  //if(thermocouple.readFahrenheit() < Setpoint-150) digitalWrite(RELAY_PIN,HIGH);
+    //else runrelay();
+  runrelay();  
 
- 
+  
   
 #if defined(wifi)
   server.send(200, "text/plain", webString);
@@ -139,11 +135,11 @@ void runrelay(){
 
 #if defined(invertSSR)
   if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,HIGH);
-  else digitalWrite(RELAY_PIN,LOW);
+    else digitalWrite(RELAY_PIN,LOW);
 #endif
 #if !defined(invertSSR)
-if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,LOW);
-  else digitalWrite(RELAY_PIN,HIGH);
+  if(Output < millis() - windowStartTime) digitalWrite(RELAY_PIN,LOW);
+    else digitalWrite(RELAY_PIN,HIGH);
 #endif
  
 }
