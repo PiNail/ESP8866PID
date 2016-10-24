@@ -9,7 +9,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-//#define wifi
+#define wifi
 //#define invertSSR
 //#define msLoop
 int msLoop = 0;
@@ -65,9 +65,10 @@ double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
 //PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
-PID myPID(&Input, &Output, &Setpoint, 100, 20, 0.1, DIRECT);
+//PID myPID(&Input, &Output, &Setpoint, 100, 20, 0.1, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, 1, 1, 1, DIRECT);
 
-int WindowSize = 1000;
+int WindowSize = 800;
 unsigned long windowStartTime;
 
 
@@ -114,7 +115,7 @@ void loop() {
   temp_f = thermocouple.readFahrenheit();
 #if defined(wifi)
   webString = "Temperature: " + String((int)temp_f) + " F";
-  webString = "Output: " + String((int)Output);
+  //webString = "Output: " + String((int)Output);
 #endif
   Input = temp_f;
   myPID.Compute();
@@ -174,7 +175,7 @@ void drawscreen(){
   display.print("Temp");
   display.setTextSize(3);
   display.setCursor(0, 30);
-  display.println(round(thermocouple.readFahrenheit()*10)/10.0);
+  display.println(thermocouple.readFahrenheit());
   display.setCursor(109, 30);
   display.print("F");
   display.display();
