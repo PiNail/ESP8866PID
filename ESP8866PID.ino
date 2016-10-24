@@ -13,6 +13,7 @@
 //#define invertSSR
 //#define msLoop
 int msLoop = 0;
+#define TempChange
 
 //webstuff
 float temp_f;
@@ -66,11 +67,11 @@ double Setpoint, Input, Output;
 //PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
 PID myPID(&Input, &Output, &Setpoint, 100, 20, 0.1, DIRECT);
 
-int WindowSize = 400;
+int WindowSize = 1000;
 unsigned long windowStartTime;
 
 
-
+int PrevTemp;
 
 
 void setup() {
@@ -109,6 +110,7 @@ void setup() {
 
 void loop() {
   // basic readout test, just print the current temp
+  //temp_f = round(thermocouple.readFahrenheit()*10)/10.0;
   temp_f = thermocouple.readFahrenheit();
 #if defined(wifi)
   webString = "Temperature: " + String((int)temp_f) + " F";
@@ -130,7 +132,15 @@ void loop() {
 #if !defined(msLoop)
   drawscreen();
 #endif
-  
+
+#if defined(TempChange)
+  if round(thermocouple.readFahrenheit() > PrevTemp) drawscreen();
+  if round(thermocouple.readFahrenheit() < PrevTemp) drawscreen();
+  PrevTemp = round(thermocouple.readFahrenheit());
+#endif
+#if !defined(TempChange)
+  drawscreen();
+#endif
   
 #if defined(wifi)
   server.send(200, "text/plain", webString);
@@ -164,7 +174,7 @@ void drawscreen(){
   display.print("Temp");
   display.setTextSize(3);
   display.setCursor(0, 30);
-  display.println(thermocouple.readFahrenheit());
+  display.println(round(thermocouple.readFahrenheit()*10)/10.0);
   display.setCursor(109, 30);
   display.print("F");
   display.display();
