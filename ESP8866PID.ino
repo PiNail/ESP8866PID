@@ -93,6 +93,7 @@ int buttonStateR = 0;         // variable for reading the pushbutton status
 int buttonStateL = 0;
 int mult = 10;
 int menuAct = 0;
+int menuFlag = 0;
 
 void setup() {
   pinMode(buttonPinR, INPUT);
@@ -136,10 +137,9 @@ void loop() {
   // read the state of the pushbutton value:
   buttonStateR = digitalRead(buttonPinR);
   buttonStateL = digitalRead(buttonPinL);
-  if (buttonStateR == HIGH && buttonStateL == HIGH) menuAct = 1;
-  if (menuAct = 1) menusys();
-  else butLogic();
-   
+  if (buttonStateR == HIGH && buttonStateL == HIGH) menusys();
+  if (buttonStateR == HIGH && buttonStateL == LOW) setSetpointUP();
+  if (buttonStateR == LOW && buttonStateL == HIGH) setSetpointDOWN();
   // basic readout test, just print the current temp
   //temp_f = round(thermocouple.readFahrenheit()*10)/10.0;
   temp_f = thermocouple.readFahrenheit();
@@ -149,15 +149,12 @@ void loop() {
 #endif
   Input = temp_f;
   myPID.Compute();
-  //drawscreen();
-  //if(thermocouple.readFahrenheit() < Setpoint-150) digitalWrite(RELAY_PIN,HIGH);
-    //else runrelay();
   runrelay();  
 
 //trying a countdown timer
 #if defined(Timer)
   msLoop = msLoop + 1;
-  if (msLoop = 199000) drawscreen();
+  if (msLoop = 199999) drawscreen();
   if (msLoop = 200000) msLoop = 0;
 #endif
 //#if !defined(msLoop)
@@ -211,8 +208,19 @@ void drawscreen(){
   display.setCursor(80, 20);
   display.print("F");
   display.display();
+  if (menuFlag == 1) menuDisp();
   delay(120);
+  if (buttonStateR == HIGH && buttonStateL == HIGH) menuFlag = 0;
+  
+  
 }
+
+void menuDisp(){
+  display.setTextSize(2);
+  display.setCursor(0, 40);
+  display.print("Menu1");
+}
+  
 
 void setSetpointUP(){
     Setpoint = Setpoint + mult;
@@ -223,19 +231,20 @@ void setSetpointDOWN(){
 }
 
 void menusys(){
-  menuAct = 1;
+  //display.clearDisplay();
+  menuFlag = 1;
   
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setCursor(0, 40);
-  display.print("Menu1");  
-  delay(120);
-  if (buttonStateR == HIGH && buttonStateL == HIGH) menuAct = 0;
   
 }
 
 void butLogic(){
+  menuAct = 0;
   if (buttonStateR == HIGH) setSetpointUP();
   if (buttonStateL == HIGH) setSetpointDOWN();
+}
+
+void menuLogic(){
+  if (menuAct > 1) menusys();
+  else butLogic();
 }
 
