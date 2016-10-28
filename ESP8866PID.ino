@@ -136,8 +136,8 @@ void loop() {
   // read the state of the pushbutton value:
   buttonStateR = digitalRead(buttonPinR);
   buttonStateL = digitalRead(buttonPinL);
-  if (buttonStateR == HIGH && buttonStateL == HIGH) menusys();
-  if (menuAct == 1) menusys();
+  if (buttonStateR == HIGH && buttonStateL == HIGH) menuAct = 1;
+  if (menuAct = 1) menusys();
   else butLogic();
    
   // basic readout test, just print the current temp
@@ -224,11 +224,13 @@ void setSetpointDOWN(){
 
 void menusys(){
   menuAct = 1;
+  
   display.clearDisplay();
   display.setTextSize(2);
   display.setCursor(0, 40);
   display.print("Menu1");  
   delay(120);
+  if (buttonStateR == HIGH && buttonStateL == HIGH) menuAct = 0;
   
 }
 
