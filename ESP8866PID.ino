@@ -92,6 +92,7 @@ const int ledPin =  LED_BUILTIN;      // the number of the LED pin
 int buttonStateR = 0;         // variable for reading the pushbutton status
 int buttonStateL = 0;
 int mult = 10;
+int menuAct = 0;
 
 void setup() {
   pinMode(buttonPinR, INPUT);
@@ -131,11 +132,14 @@ void setup() {
 }
 
 void loop() {
+  display.clearDisplay();
   // read the state of the pushbutton value:
   buttonStateR = digitalRead(buttonPinR);
   buttonStateL = digitalRead(buttonPinL);
-  if (buttonStateR == HIGH) setSetpointUP();
-  if (buttonStateL == HIGH) setSetpointDOWN(); 
+  if (buttonStateR == HIGH && buttonStateL == HIGH) menusys();
+  if (menuAct == 1) menusys();
+  else butLogic();
+   
   // basic readout test, just print the current temp
   //temp_f = round(thermocouple.readFahrenheit()*10)/10.0;
   temp_f = thermocouple.readFahrenheit();
@@ -168,6 +172,7 @@ void loop() {
 //#if !defined(TempChange)
   //drawscreen();
 //#endif
+  display.display(); 
   
 #if defined(wifi)
   server.send(200, "text/plain", webString);
@@ -195,15 +200,15 @@ void runrelay(){
 }
 
 void drawscreen(){
-  display.clearDisplay();
+  
   display.setTextSize(2);
   display.setCursor(0, 0);
   display.println(thermocouple.readFahrenheit());
   display.setCursor(80, 0);
   display.print("F");
-  display.setCursor(0, 30);
+  display.setCursor(0, 20);
   display.println(Setpoint);
-  display.setCursor(80, 30);
+  display.setCursor(80, 20);
   display.print("F");
   display.display();
   delay(120);
@@ -216,3 +221,19 @@ void setSetpointUP(){
 void setSetpointDOWN(){
     Setpoint = Setpoint - mult;
 }
+
+void menusys(){
+  menuAct = 1;
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(0, 40);
+  display.print("Menu1");  
+  delay(120);
+  
+}
+
+void butLogic(){
+  if (buttonStateR == HIGH) setSetpointUP();
+  if (buttonStateL == HIGH) setSetpointDOWN();
+}
+
