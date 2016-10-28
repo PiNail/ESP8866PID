@@ -9,11 +9,11 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#define wifi
+//#define wifi
 //#define invertSSR
-//#define msLoop
-int msLoop = 0;
-#define TempChange
+#define Timer
+int msLoop=0;
+//#define TempChange
 
 //webstuff
 float temp_f;
@@ -64,20 +64,41 @@ int gndPin = 2;
 double Setpoint, Input, Output;
 
 //Specify the links and initial tuning parameters
-//PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);
-//PID myPID(&Input, &Output, &Setpoint, 100, 20, 0.1, DIRECT);
-PID myPID(&Input, &Output, &Setpoint, 1, 1, 1, DIRECT);
+//PID myPID(&Input, &Output, &Setpoint, 1, 0020, 0010, DIRECT);  // = original
+//PID myPID(&Input, &Output, &Setpoint, 100, 20, 0.1, DIRECT); // = first refined
+//PID myPID(&Input, &Output, &Setpoint, 38.04, 2.35, 147.63, DIRECT);
 
-int WindowSize = 800;
+
+//PID myPID(&Input, &Output, &Setpoint, 2, 5, 1, DIRECT);
+//PID myPID(&Input, &Output, &Setpoint, 16, 0.5, 4, DIRECT);
+PID myPID(&Input, &Output, &Setpoint, 0.64, 29, 7, DIRECT);
+//PID myPID(&Input, &Output, &Setpoint, 100, 10, 1, DIRECT); // = 810f
+//PID myPID(&Input, &Output, &Setpoint, 100, 40, 1, DIRECT); // = 810f
+//PID myPID(&Input, &Output, &Setpoint, 400, 10, 1, DIRECT); // = 814f
+//PID myPID(&Input, &Output, &Setpoint, 5, 10, 1, DIRECT);  // = 828f
+
+int WindowSize = 500;
 unsigned long windowStartTime;
 
 
 int PrevTemp;
 
+// set pin numbers:
+const int buttonPinR = 14 ;     // the number of the pushbutton pin
+const int buttonPinL = 2;     // the number of the pushbutton pin
+const int ledPin =  LED_BUILTIN;      // the number of the LED pin
+
+// variables will change:
+int buttonStateR = 0;         // variable for reading the pushbutton status
+int buttonStateL = 0;
+int mult = 10;
 
 void setup() {
+  pinMode(buttonPinR, INPUT);
+  pinMode(buttonPinL, INPUT);
+  
   windowStartTime = millis();
-  Setpoint = 850;
+  Setpoint = 70;
   myPID.SetOutputLimits(0, 100);
   myPID.SetMode(AUTOMATIC);
 
@@ -110,6 +131,11 @@ void setup() {
 }
 
 void loop() {
+  // read the state of the pushbutton value:
+  buttonStateR = digitalRead(buttonPinR);
+  buttonStateL = digitalRead(buttonPinL);
+  if (buttonStateR == HIGH) setSetpointUP();
+  if (buttonStateL == HIGH) setSetpointDOWN(); 
   // basic readout test, just print the current temp
   //temp_f = round(thermocouple.readFahrenheit()*10)/10.0;
   temp_f = thermocouple.readFahrenheit();
@@ -125,23 +151,23 @@ void loop() {
   runrelay();  
 
 //trying a countdown timer
-#if defined(msLoop)
+#if defined(Timer)
   msLoop = msLoop + 1;
-  if (msLoop = 1990000000) drawscreen();
-  if (msLoop = 2000000000) msLoop = 0;
+  if (msLoop = 199000) drawscreen();
+  if (msLoop = 200000) msLoop = 0;
 #endif
-#if !defined(msLoop)
-  drawscreen();
-#endif
+//#if !defined(msLoop)
+  //drawscreen();
+//#endif
 
 #if defined(TempChange)
   if round(thermocouple.readFahrenheit() > PrevTemp) drawscreen();
   if round(thermocouple.readFahrenheit() < PrevTemp) drawscreen();
   PrevTemp = round(thermocouple.readFahrenheit());
 #endif
-#if !defined(TempChange)
-  drawscreen();
-#endif
+//#if !defined(TempChange)
+  //drawscreen();
+//#endif
   
 #if defined(wifi)
   server.send(200, "text/plain", webString);
@@ -171,17 +197,22 @@ void runrelay(){
 void drawscreen(){
   display.clearDisplay();
   display.setTextSize(2);
-  display.setCursor(38, 0);
-  display.print("Temp");
-  display.setTextSize(3);
-  display.setCursor(0, 30);
+  display.setCursor(0, 0);
   display.println(thermocouple.readFahrenheit());
-  display.setCursor(109, 30);
+  display.setCursor(80, 0);
+  display.print("F");
+  display.setCursor(0, 30);
+  display.println(Setpoint);
+  display.setCursor(80, 30);
   display.print("F");
   display.display();
-  display.println();
-  
-
   delay(120);
 }
 
+void setSetpointUP(){
+    Setpoint = Setpoint + mult;
+}
+
+void setSetpointDOWN(){
+    Setpoint = Setpoint - mult;
+}
