@@ -91,6 +91,7 @@ int buttonStateL = 0;
 int mult = 10;
 int menuAct = 0;
 int menuFlag = 0;
+int menuCounter = 0;
 String Selection = ("Menu 2");
 
 void setup() {
@@ -175,9 +176,14 @@ void loop() {
 
 void buttoncheck() {
    if (buttonStateR == HIGH && buttonStateL == HIGH) {
-      menuFlag ++;
-      if (menuFlag >=2) {
+      menuCounter ++;
+      if (menuCounter >=1 && menuFlag == 1) {
         menuFlag = 0;
+        menuCounter = 0;
+      }
+      if(menuCounter >=1 && menFlag == 0){
+        menuFlag = 1;
+        menuCounter = 0:
       }
    }
   if (buttonStateR == HIGH && buttonStateL == LOW) {
