@@ -173,9 +173,18 @@ void loop() {
 }
 
 void buttoncheck() {
-   if (buttonStateR == HIGH && buttonStateL == HIGH) menusys();
-  if (buttonStateR == HIGH && buttonStateL == LOW) setSetpointUP();
-  if (buttonStateR == LOW && buttonStateL == HIGH) setSetpointDOWN();
+   if (buttonStateR == HIGH && buttonStateL == HIGH) {
+      menuflag ++;
+      if (menuflag >=2) {
+        menuflag = 0;
+      }
+   }
+  if (buttonStateR == HIGH && buttonStateL == LOW) {
+    Setpoint = Setpoint + mult;
+  }
+  if (buttonStateR == LOW && buttonStateL == HIGH) {
+    Setpoint = Setpoint - mult;
+  }
 }
 void runrelay(){
   //setup code here to use output from PID loop to apply it towards relay
@@ -210,15 +219,6 @@ void drawscreen(){
   
 }
   
-
-void setSetpointUP(){
-    Setpoint = Setpoint + mult;
-}
-
-void setSetpointDOWN(){
-    Setpoint = Setpoint - mult;
-}
-
 void menusys(){
   //display.clearDisplay();
   menuFlag = 1;
