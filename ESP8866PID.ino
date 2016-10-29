@@ -51,9 +51,6 @@ int thermoCLK = 13;
 const int RELAY_PIN =  16;
 // Variables will change :
 int ledState = LOW;
-#if (SSD1306_LCDHEIGHT != 64)
-#error("Height incorrect, please fix Adafruit_SSD1306.h!");
-#endif
 
 MAX6675 thermocouple(thermoCLK, thermoCS, thermoDO);
 int vccPin = 3;
@@ -137,9 +134,7 @@ void loop() {
   // read the state of the pushbutton value:
   buttonStateR = digitalRead(buttonPinR);
   buttonStateL = digitalRead(buttonPinL);
-  if (buttonStateR == HIGH && buttonStateL == HIGH) menusys();
-  if (buttonStateR == HIGH && buttonStateL == LOW) setSetpointUP();
-  if (buttonStateR == LOW && buttonStateL == HIGH) setSetpointDOWN();
+  buttoncheck();
   // basic readout test, just print the current temp
   //temp_f = round(thermocouple.readFahrenheit()*10)/10.0;
   temp_f = thermocouple.readFahrenheit();
@@ -177,7 +172,11 @@ void loop() {
 #endif
 }
 
-
+void buttoncheck() {
+   if (buttonStateR == HIGH && buttonStateL == HIGH) menusys();
+  if (buttonStateR == HIGH && buttonStateL == LOW) setSetpointUP();
+  if (buttonStateR == LOW && buttonStateL == HIGH) setSetpointDOWN();
+}
 void runrelay(){
   //setup code here to use output from PID loop to apply it towards relay
    if(millis() - windowStartTime>WindowSize)
@@ -208,17 +207,7 @@ void drawscreen(){
   display.setCursor(80, 20);
   display.print("F");
   display.display();
-  if (menuFlag == 1) menuDisp();
-  delay(120);
-  if (buttonStateR == HIGH && buttonStateL == HIGH) menuFlag = 0;
   
-  
-}
-
-void menuDisp(){
-  display.setTextSize(2);
-  display.setCursor(0, 40);
-  display.print("Menu1");
 }
   
 
