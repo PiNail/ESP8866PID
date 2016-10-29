@@ -205,7 +205,7 @@ void runrelay(){
 }
 
 void drawscreen(){
-  
+  if(menuflag == 0) {
   display.setTextSize(2);
   display.setCursor(0, 0);
   display.println(thermocouple.readFahrenheit());
@@ -216,24 +216,12 @@ void drawscreen(){
   display.setCursor(80, 20);
   display.print("F");
   display.display();
-  
-}
-  
-void menusys(){
-  //display.clearDisplay();
-  menuFlag = 1;
-  
-  
+  }
+  if(menuflag == 1){
+    //display menu shit here... this is crude but it works.... basically when your counter hits 1 this menu will appear then when your counter rolls over 1->2 it will get set to 0 then it will go back to main display
+    
+  }
 }
 
-void butLogic(){
-  menuAct = 0;
-  if (buttonStateR == HIGH) setSetpointUP();
-  if (buttonStateL == HIGH) setSetpointDOWN();
-}
 
-void menuLogic(){
-  if (menuAct > 1) menusys();
-  else butLogic();
-}
 
