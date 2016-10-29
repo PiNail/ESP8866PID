@@ -240,21 +240,20 @@ void mainMenu(){
   display.clearDisplay();
   display.setTextSize(2);
   display.setCursor(0,40);
-  buttonStateR = digitalRead(buttonPinR);
-  buttonStateL = digitalRead(buttonPinL);
   if (buttonStateR == HIGH && buttonStateL == LOW) {
     Selection = ("Menu 3");
     if (buttonStateR == LOW && buttonStateL == HIGH) {
-      Selection = ("Menu 2");
-      mainMenu();
+      Selection = ("Menu 2");  
     }
+    mainMenu();
   }
   if (buttonStateR == LOW && buttonStateL == HIGH) {
     Selection = ("Menu 1");
     if (buttonStateR == HIGH && buttonStateL == LOW) {
       Selection = ("Menu 2");
-      mainMenu();
+     
     }
+     mainMenu();
   }
   display.clearDisplay();
   display.setCursor(0,40);
