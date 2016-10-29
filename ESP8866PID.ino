@@ -91,6 +91,7 @@ int buttonStateL = 0;
 int mult = 10;
 int menuAct = 0;
 int menuFlag = 0;
+String Selection = ("Menu 2");
 
 void setup() {
   pinMode(buttonPinR, INPUT);
@@ -219,11 +220,35 @@ void drawscreen(){
   }
   if(menuFlag == 1){
     //display menu shit here... this is crude but it works.... basically when your counter hits 1 this menu will appear then when your counter rolls over 1->2 it will get set to 0 then it will go back to main display
-    display.setTextSize(2);
-    display.setCursor(0,40);
-    display.print("Menu1");
+    mainMenu();
+    
   }
 }
 
+void mainMenu(){
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setCursor(0,40);
+  buttonStateR = digitalRead(buttonPinR);
+  buttonStateL = digitalRead(buttonPinL);
+  if (buttonStateR == HIGH && buttonStateL == LOW) {
+    Selection = ("Menu 3");
+    if (buttonStateR == LOW && buttonStateL == HIGH) {
+      Selection = ("Menu 2");
+      mainMenu();
+    }
+  }
+  if (buttonStateR == LOW && buttonStateL == HIGH) {
+    Selection = ("Menu 1");
+    if (buttonStateR == HIGH && buttonStateL == LOW) {
+      Selection = ("Menu 2");
+      mainMenu();
+    }
+  }
+  display.clearDisplay();
+  display.setCursor(0,40);
+  display.print(Selection);
+  display.display();
+}
 
 
