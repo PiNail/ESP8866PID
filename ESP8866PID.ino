@@ -175,16 +175,21 @@ void loop() {
 }
 
 void buttoncheck() {
-   if (buttonStateR == HIGH && buttonStateL == HIGH) {
+   if (buttonStateR == HIGH & buttonStateL == HIGH) {
+     if (menuFlag ==0) {
       menuCounter ++;
-      if (menuCounter >=1 && menuFlag == 1) {
-        menuFlag = 0;
+      if(menuCounter >=1){
+        menuFlag =1;
         menuCounter = 0;
       }
-      if(menuCounter >=1 && menFlag == 0){
-        menuFlag = 1;
-        menuCounter = 0:
+     }
+     if (menuFlag ==1){
+      menuCounter ++;
+      if(menuCounter >=1){
+        menuFlag =0;
+        menuCounter =0;
       }
+     }
    }
   if (buttonStateR == HIGH && buttonStateL == LOW) {
     Setpoint = Setpoint + mult;
