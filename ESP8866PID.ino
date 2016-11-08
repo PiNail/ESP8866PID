@@ -9,11 +9,12 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-//#define wifi
+#define wifi
 //#define invertSSR
 #define Timer
 int msLoop=0;
 //#define TempChange
+int Menu = 0;
 
 //webstuff
 float temp_f;
@@ -92,6 +93,7 @@ int mult = 10;
 int menuAct = 0;
 int menuFlag = 0;
 String Selection = ("Menu 2");
+
 
 void setup() {
   pinMode(buttonPinR, INPUT);
@@ -175,9 +177,10 @@ void loop() {
 
 void buttoncheck() {
    if (buttonStateR == HIGH && buttonStateL == HIGH) {
-      menuFlag ++;
-      if (menuFlag >=2) {
-        menuFlag = 0;
+      Menu ++;
+      if (Menu >=4) {
+        delay(100);
+        Menu = 0;
       }
    }
   if (buttonStateR == HIGH && buttonStateL == LOW) {
@@ -206,7 +209,7 @@ void runrelay(){
 }
 
 void drawscreen(){
-  if(menuFlag == 0) {
+  if(Menu == 0) {
   display.setTextSize(2);
   display.setCursor(0, 0);
   display.println(thermocouple.readFahrenheit());
@@ -218,37 +221,45 @@ void drawscreen(){
   display.print("F");
   display.display();
   }
-  if(menuFlag == 1){
-    //display menu shit here... this is crude but it works.... basically when your counter hits 1 this menu will appear then when your counter rolls over 1->2 it will get set to 0 then it will go back to main display
-    mainMenu();
+  
+  mainMenu();
     
-  }
+  
 }
 
 void mainMenu(){
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setCursor(0,40);
-  buttonStateR = digitalRead(buttonPinR);
-  buttonStateL = digitalRead(buttonPinL);
-  if (buttonStateR == HIGH && buttonStateL == LOW) {
-    Selection = ("Menu 3");
-    if (buttonStateR == LOW && buttonStateL == HIGH) {
-      Selection = ("Menu 2");
-      mainMenu();
+  if (Menu != 0) {
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setCursor(0,40);
+    buttonStateR = digitalRead(buttonPinR);
+    buttonStateL = digitalRead(buttonPinL);   
+    if (buttonStateR = HIGH && buttonStateL == LOW) {
+      Menu ++;
     }
-  }
-  if (buttonStateR == LOW && buttonStateL == HIGH) {
-    Selection = ("Menu 1");
-    if (buttonStateR == HIGH && buttonStateL == LOW) {
-      Selection = ("Menu 2");
-      mainMenu();
+    if (buttonStateR = LOW && buttonStateL == HIGH) {
+      Menu --;
     }
+    if (Menu == 1) {
+      Selection = ("Menu1");
+    }
+    if (Menu == 2) {
+      Selection = ("Menu2");
+    }
+    if (Menu == 3) {
+      Selection = ("Menu3");
+    }
+    if (Menu >= 4) {
+      Selection = ("Exit");
+      delay(1000);
+      Menu = 0;
+    }
+    display.clearDisplay();
+    display.setCursor(0,40);
+    display.print(Selection);
+    display.display();
   }
-  display.clearDisplay();
-  display.setCursor(0,40);
-  display.print(Selection);
-  display.display();
+    
 }
 
 
