@@ -1,5 +1,3 @@
-
-
 // this example is public domain. enjoy!
 // www.ladyada.net/learn/sensors/thermocouple
 #include <PID_v1.h>
@@ -92,7 +90,6 @@ int buttonStateL = 0;
 int mult = 10;
 int menuAct = 0;
 int menuFlag = 0;
-int menuCounter = 0;
 String Selection = ("Menu 2");
 
 
@@ -177,29 +174,12 @@ void loop() {
 }
 
 void buttoncheck() {
-<<<<<<< HEAD
    if (buttonStateR == HIGH && buttonStateL == HIGH) {
       Menu ++;
       if (Menu >=4) {
         delay(100);
         Menu = 0;
-=======
-   if (buttonStateR == HIGH & buttonStateL == HIGH) {
-     if (menuFlag ==0) {
-      menuCounter ++;
-      if(menuCounter >=1){
-        menuFlag =1;
-        menuCounter = 0;
->>>>>>> origin/master
       }
-     }
-     if (menuFlag ==1){
-      menuCounter ++;
-      if(menuCounter >=1){
-        menuFlag =0;
-        menuCounter =0;
-      }
-     }
    }
   if (buttonStateR == HIGH && buttonStateL == LOW) {
     Setpoint = Setpoint + mult;
@@ -246,7 +226,6 @@ void drawscreen(){
 }
 
 void mainMenu(){
-<<<<<<< HEAD
   if (Menu != 0) {
     display.clearDisplay();
     display.setTextSize(2);
@@ -277,27 +256,10 @@ void mainMenu(){
     display.setCursor(0,40);
     display.print(Selection);
     display.display();
-=======
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setCursor(0,40);
-  if (buttonStateR == HIGH && buttonStateL == LOW) {
-    Selection = ("Menu 3");
-    if (buttonStateR == LOW && buttonStateL == HIGH) {
-      Selection = ("Menu 2");  
-    }
-    mainMenu();
-  }
-  if (buttonStateR == LOW && buttonStateL == HIGH) {
-    Selection = ("Menu 1");
-    if (buttonStateR == HIGH && buttonStateL == LOW) {
-      Selection = ("Menu 2");
-     
-    }
-     mainMenu();
->>>>>>> origin/master
   }
     
 }
+
+
 
 
