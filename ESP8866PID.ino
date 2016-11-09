@@ -230,12 +230,11 @@ void mainMenu(){
     display.clearDisplay();
     display.setTextSize(2);
     display.setCursor(0,40);
-    buttonStateR = digitalRead(buttonPinR);
-    buttonStateL = digitalRead(buttonPinL);   
-    if (buttonStateR = HIGH && buttonStateL == LOW) {
+    
+    if (buttonStateR = HIGH) {
       Menu ++;
     }
-    if (buttonStateR = LOW && buttonStateL == HIGH) {
+    if (buttonStateR = LOW) {
       Menu --;
     }
     if (Menu == 1) {
