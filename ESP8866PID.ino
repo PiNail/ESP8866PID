@@ -237,10 +237,10 @@ void mainMenu(){
     }
     buttonState_prevR = buttonStateR;
     
-    if (buttonStateR == HIGH && (buttonStateL!=buttonState_prevR)) {
+    if (buttonStateL == HIGH && (buttonStateL!=buttonState_prevL)) {
       Menu --;
     }
-    buttonState_prevL=buttonStateR;
+    buttonState_prevL=buttonStateL;
     if (Menu == 1) {
       Selection = ("Menu1");
     }
@@ -255,10 +255,11 @@ void mainMenu(){
       delay(1000);
       Menu = 0;
     }
-    display.clearDisplay();
+    //display.clearDisplay();
     display.setCursor(0,40);
     display.print(Selection);
     display.display();
+    delay(120);
   }
     
 }
