@@ -7,7 +7,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#define wifi
+//#define wifi
 //#define invertSSR
 #define Timer
 int msLoop=0;
@@ -46,6 +46,8 @@ Adafruit_SSD1306 display(OLED_RESET);
 int thermoDO = 12;
 int thermoCS = 15;
 int thermoCLK = 13;
+byte buttonState_prevR;
+byte buttonState_prevL;
 
 const int RELAY_PIN =  16;
 // Variables will change :
@@ -230,13 +232,15 @@ void mainMenu(){
     display.clearDisplay();
     display.setTextSize(2);
     display.setCursor(0,40);
-    
-    if (buttonStateR = HIGH) {
+    if (buttonStateR == HIGH && (buttonStateR!=buttonState_prevR)) {
       Menu ++;
     }
-    if (buttonStateR = LOW) {
+    buttonState_prevR = buttonStateR;
+    
+    if (buttonStateR == HIGH && (buttonStateL!=buttonState_prevR)) {
       Menu --;
     }
+    buttonState_prevL=buttonStateR;
     if (Menu == 1) {
       Selection = ("Menu1");
     }
